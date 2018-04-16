@@ -19,7 +19,7 @@ public abstract class FocusObject : MonoBehaviour
     protected FirstPersonController controller;
     protected Transform playerCamera;
     //location information
-    protected Quaternion previousRotation; // used to rotate back to previous position
+    private Quaternion previousRotation; // used to rotate back to previous position
     private Transform zoomLoc; // location of the focus point
     private Vector3 previousPosition;
 
