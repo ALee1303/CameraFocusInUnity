@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 
 
@@ -69,9 +67,8 @@ public abstract class FocusObject : MonoBehaviour
                 //enable controller and raycast again.
                 controller.enabled = true;
                 raycast.enabled = true;
-            }
-            if (isOnPlayer())
                 isReturning = false;
+            }
         }
     }
 
@@ -81,6 +78,8 @@ public abstract class FocusObject : MonoBehaviour
     /// </summary>
     protected void moveToFocus()
     {
+        if (isReturning || isFocusing || isOnFocus())
+            return;
         previousPosition = playerCamera.transform.position; //stores current position of the camera to previousRotation.
         previousRotation = playerCamera.rotation; //stores current rotation of the camera to previousRotation.
         raycast.enabled = false; //disables Raycast.
@@ -92,6 +91,9 @@ public abstract class FocusObject : MonoBehaviour
     ///</summary>
     protected void returnToPosition()
     {
+        if (!isOnFocus())
+            return; // exit if its not on focus
+        // if on focus,
         isReturning = true; // returns the camera
     }
 
