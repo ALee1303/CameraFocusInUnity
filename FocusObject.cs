@@ -15,18 +15,19 @@ public abstract class FocusObject : MonoBehaviour
     protected bool isReturning;
 
     //fields for holding game objects
-    protected GameObject player;
+    private RayCastInteractable raycast;
     protected FirstPersonController controller;
     protected Transform playerCamera;
     //location information
     private Quaternion previousRotation; // used to rotate back to previous position
-    private Transform zoomLoc; // location of the focus point
     private Vector3 previousPosition;
+    private Transform zoomLoc; // location of the focus point
 
     private void Start()
     {
-        player = GameObject.FindWithTag("Player"); //gets the playerObject by Unity Default Tag "Player".
+        GameObject player = GameObject.FindWithTag("Player"); //gets the playerObject by Unity Default Tag "Player".
         controller = player.GetComponent<FirstPersonController>(); //gets the fps controller from the player object.
+        raycast = player.GetComponent<RayCastInteractable>();
         zoomLoc = transform.GetChild(0); //gets the focus point transform by accesing the first child of the object.
         playerCamera = player.transform.GetChild(0); //gets the player camera by accesing the first child of the player.
         previousPosition = new Vector3();
@@ -72,7 +73,7 @@ public abstract class FocusObject : MonoBehaviour
             {
                 //enable controller and raycast again.
                 controller.enabled = true;
-                player.GetComponent<RayCastInteractable>().enabled = true;
+                raycast.enabled = true;
             }
             if (isOnPlayer())
                 isReturning = false;
@@ -86,17 +87,17 @@ public abstract class FocusObject : MonoBehaviour
     {
         previousPosition = playerCamera.transform.position; //stores current position of the camera to previousRotation.
         previousRotation = playerCamera.rotation; //stores current rotation of the camera to previousRotation.
-        player.GetComponent<RayCastInteractable>().enabled = false; //disables Raycast.
+        raycast.enabled = false; //disables Raycast.
         controller.enabled = false; //disables FPS controller.
         isFocusing = true; // starts to move the camera position
     }
-    ///<summary> 
-    ///Handles input for returning the camera to previous position.
-    ///only used and called in update.
-    ///</summary>
-    private void returnToPosition()
-    {
 
+    protected void returnToPosition()
+    {
+        ///<summary> 
+        ///Handles input for returning the camera to previous position.
+        ///only used and called in update.
+        ///</summary>
         if (isOnFocus() && Input.GetKeyDown(KeyCode.E))
             isReturning = true; // returns the camera
     }
