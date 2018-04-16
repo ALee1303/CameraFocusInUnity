@@ -14,10 +14,10 @@ public abstract class FocusObject : MonoBehaviour
     protected bool isFocusing;
     protected bool isReturning;
 
-    //fields for holding game objects
+    //fields for holding game objects attached to player
     private RayCastInteractable raycast;
-    protected FirstPersonController controller;
-    protected Transform playerCamera;
+    private FirstPersonController controller;
+    private Transform playerCamera;
     //location information
     private Quaternion previousRotation; // used to rotate back to previous position
     private Vector3 previousPosition;
@@ -34,12 +34,11 @@ public abstract class FocusObject : MonoBehaviour
         previousRotation = new Quaternion(); //initializes the previous rotation to a heap data. Must be set on derived class when activated.
     }
 
-    ///<summary>
-    ///update is checking the player's status at live.
-    ///It does not take in input untill player actually zooms in.
-    ///Thus it usually wont be necessary to override or change this function.
-    ///However, if necessary, inherit the class and override the function, then call the base.Update() after your adjustment.
-    ///</summary>
+    /// <summary>
+    /// returnToPosition() can be called at different position.
+    /// To do so, override Update() on derived class and remove the calls
+    /// Focus should always be called on update.
+    /// </summary>
     protected virtual void Update()
     {
         returnToPosition();
@@ -48,7 +47,8 @@ public abstract class FocusObject : MonoBehaviour
 
     ///<summary>
     ///this function only activates when isFocusing or isReturning is changed by the player input or zoomCheck().
-    ///only needs to be called in update.
+    /// Must be called on update.
+    /// calling it every frame is not inefficient since it performs a boolean check.
     ///</summary>
     private void focus()
     {
@@ -91,13 +91,13 @@ public abstract class FocusObject : MonoBehaviour
         controller.enabled = false; //disables FPS controller.
         isFocusing = true; // starts to move the camera position
     }
-
+    ///<summary> 
+    ///Handles input for returning the camera to previous position.
+    ///only used and called in update.
+    ///</summary>
     protected void returnToPosition()
     {
-        ///<summary> 
-        ///Handles input for returning the camera to previous position.
-        ///only used and called in update.
-        ///</summary>
+
         if (isOnFocus() && Input.GetKeyDown(KeyCode.E))
             isReturning = true; // returns the camera
     }
