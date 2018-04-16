@@ -35,21 +35,15 @@ public abstract class FocusObject : MonoBehaviour
     }
 
     /// <summary>
-    /// returnToPosition() can be called at different places.
-    /// To do so, override Update() on derived class and call just focus()
     /// focus() should always be called on Update().
     /// </summary>
     protected virtual void Update()
     {
-        if (isOnFocus() && Input.GetKeyDown(KeyCode.E))
-            returnToPosition();
         focus();
     }
 
     ///<summary>
-    /// this function only activates when isFocusing or isReturning is changed by the player input or zoomCheck().
     /// Must be called on update.
-    /// calling it every frame is not inefficient since it performs a boolean check.
     ///</summary>
     protected void focus()
     {
@@ -82,6 +76,7 @@ public abstract class FocusObject : MonoBehaviour
     }
 
     /// <summary>
+    /// start moving to the focus point
     /// can be called in derived class to move to specified position
     /// </summary>
     protected void moveToFocus()
@@ -93,9 +88,7 @@ public abstract class FocusObject : MonoBehaviour
         isFocusing = true; // starts to move the camera position
     }
     ///<summary> 
-    ///Handles input for returning the camera to previous position.
-    ///checked in update by default but can be called anywhere else
-    ///this function is not necessary 
+    /// start returning the camera to previous position.
     ///</summary>
     protected void returnToPosition()
     {
@@ -104,7 +97,6 @@ public abstract class FocusObject : MonoBehaviour
 
     ///<summary>
     ///boolean for checking wether camera has finished traveling.
-    ///either one is true and one is false, both cannot equal.
     ///</summary>
     protected bool isOnFocus()
     {
