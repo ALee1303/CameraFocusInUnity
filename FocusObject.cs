@@ -79,6 +79,9 @@ public abstract class FocusObject : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// can be called in derived class to move to specified position
+    /// </summary>
     protected void moveToFocus()
     {
         previousPosition = playerCamera.transform.position; //stores current position of the camera to previousRotation.
@@ -87,13 +90,13 @@ public abstract class FocusObject : MonoBehaviour
         controller.enabled = false; //disables FPS controller.
         isFocusing = true; // starts to move the camera position
     }
-
+    ///<summary> 
+    ///Handles input for returning the camera to previous position.
+    ///only used and called in update.
+    ///</summary>
     private void returnToPosition()
     {
-        ///<summary> 
-        ///Handles input for returning the camera to previous position.
-        ///only used and called in update.
-        ///</summary>
+
         if (isOnFocus() && Input.GetKeyDown(KeyCode.E))
             isReturning = true; // returns the camera
     }
