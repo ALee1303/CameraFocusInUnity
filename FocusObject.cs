@@ -6,11 +6,11 @@ public abstract class FocusObject : MonoBehaviour
 {
     //adjust the movement speed of camera
     [SerializeField]
-    protected float Movespeed;
+    private float Movespeed;
 
     //change these to true to get the camera moving
-    protected bool isFocusing;
-    protected bool isReturning;
+    private bool isFocusing;
+    private bool isReturning;
 
     //fields for holding game objects attached to player
     private RayCastInteractable raycast;
