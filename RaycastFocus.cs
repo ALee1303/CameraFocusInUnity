@@ -17,7 +17,7 @@ public class RaycastFocus : FocusObject, IInteractable
         base.Update();
     }
 
-    public void Activate() //activated by player input 'E'
+    public void Interact() //activated by player input 'E'
     {
         moveToFocus();
     }

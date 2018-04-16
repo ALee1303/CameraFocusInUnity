@@ -13,7 +13,7 @@ public abstract class FocusObject : MonoBehaviour
     private bool isReturning;
 
     //fields for holding game objects attached to player
-    private RayCastInteractable raycast;
+    private InteractWithSelectedObject raycast;
     private FirstPersonController controller;
     private Transform playerCamera;
     //location information
@@ -25,7 +25,7 @@ public abstract class FocusObject : MonoBehaviour
     {
         GameObject player = GameObject.FindWithTag("Player"); //gets the playerObject by Unity Default Tag "Player".
         controller = player.GetComponent<FirstPersonController>(); //gets the fps controller from the player object.
-        raycast = player.GetComponent<RayCastInteractable>();
+        raycast = player.GetComponentInChildren<InteractWithSelectedObject>();
         zoomLoc = transform.GetChild(0); //gets the focus point transform by accesing the first child of the object.
         playerCamera = player.transform.GetChild(0); //gets the player camera by accesing the first child of the player.
         previousPosition = new Vector3();
