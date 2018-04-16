@@ -21,7 +21,7 @@ public abstract class FocusObject : MonoBehaviour
     //location information
     protected Quaternion previousRotation; // used to rotate back to previous position
     private Transform zoomLoc; // location of the focus point
-    private Transform playerCameraLoc; //used to move back to previous position
+    private Vector3 previousPosition;
 
     private void Start()
     {
@@ -29,7 +29,7 @@ public abstract class FocusObject : MonoBehaviour
         controller = player.GetComponent<FirstPersonController>(); //gets the fps controller from the player object.
         zoomLoc = transform.GetChild(0); //gets the focus point transform by accesing the first child of the object.
         playerCamera = player.transform.GetChild(0); //gets the player camera by accesing the first child of the player.
-        playerCameraLoc = player.transform.GetChild(1); // gets the position to return to by accesing the 2nd child of the player.
+        previousPosition = new Vector3();
         previousRotation = new Quaternion(); //initializes the previous rotation to a heap data. Must be set on derived class when activated.
     }
 
@@ -65,7 +65,7 @@ public abstract class FocusObject : MonoBehaviour
         {
             //slowly move back to the player position
             playerCamera.position = Vector3.MoveTowards
-                (playerCamera.position, playerCameraLoc.position, Movespeed * Time.deltaTime);
+                (playerCamera.position, previousPosition, Movespeed * Time.deltaTime);
             playerCamera.rotation = Quaternion.Lerp
                 (playerCamera.rotation, previousRotation, Movespeed * Time.deltaTime);
             if (isOnPlayer())// when finished returning
@@ -73,9 +73,19 @@ public abstract class FocusObject : MonoBehaviour
                 //enable controller and raycast again.
                 controller.enabled = true;
                 player.GetComponent<RayCastInteractable>().enabled = true;
-                isReturning = false;
             }
+            if (isOnPlayer())
+                isReturning = false;
         }
+    }
+
+    protected void moveToFocus()
+    {
+        previousPosition = playerCamera.transform.position; //stores current position of the camera to previousRotation.
+        previousRotation = playerCamera.rotation; //stores current rotation of the camera to previousRotation.
+        player.GetComponent<RayCastInteractable>().enabled = false; //disables Raycast.
+        controller.enabled = false; //disables FPS controller.
+        isFocusing = true; // starts to move the camera position
     }
 
     private void returnToPosition()
@@ -101,7 +111,7 @@ public abstract class FocusObject : MonoBehaviour
     }
     protected bool isOnPlayer()// Only true the moment camera goes back to the player.
     {
-        if (playerCamera.position == playerCameraLoc.position &&
+        if (playerCamera.position == previousPosition &&
             playerCamera.rotation == previousRotation)
             return true;
         return false;
