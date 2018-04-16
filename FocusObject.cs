@@ -43,7 +43,6 @@ public abstract class FocusObject : MonoBehaviour
     {
         returnToPosition();
         focus();
-        zoomCheck();
     }
 
     ///<summary>
@@ -59,6 +58,8 @@ public abstract class FocusObject : MonoBehaviour
                 (playerCamera.position, zoomLoc.position, Movespeed * Time.deltaTime);
             playerCamera.rotation = Quaternion.Lerp
                 (playerCamera.rotation, zoomLoc.rotation, Movespeed * Time.deltaTime);
+            if (isOnFocus())
+                isFocusing = false;
         }
         if (isReturning) // if retruning to position
         {
@@ -72,6 +73,7 @@ public abstract class FocusObject : MonoBehaviour
                 //enable controller and raycast again.
                 controller.enabled = true;
                 player.GetComponent<RayCastInteractable>().enabled = true;
+                isReturning = false;
             }
         }
     }
@@ -86,32 +88,20 @@ public abstract class FocusObject : MonoBehaviour
             isReturning = true; // returns the camera
     }
 
-    private void zoomCheck()
-    {
-        ///<summary>
-        ///checks if camera has traveled and rotated completely.
-        ///If so, stop the camera movement.
-        ///</summary>
-        if (isOnFocus())
-            isFocusing = false;
-        if (isOnPlayer())
-            isReturning = false;
-    }
-
     ///<summary>
     ///boolean for checking wether camera has finished traveling.
     ///either one is true and one is false, both cannot equal.
     ///</summary>
     protected bool isOnFocus()
     {
-        if (playerCamera.position == zoomLoc.position && 
-            Quaternion.Angle(playerCamera.rotation,zoomLoc.rotation) < 1) // fix: cant(playerCamera.rotation == zoomLoc.rotation)
+        if (playerCamera.position == zoomLoc.position &&
+            Quaternion.Angle(playerCamera.rotation, zoomLoc.rotation) < 1) // fix: cant(playerCamera.rotation == zoomLoc.rotation)
             return true;
         return false;
     }
     protected bool isOnPlayer()// Only true the moment camera goes back to the player.
     {
-        if (playerCamera.position == playerCameraLoc.position && 
+        if (playerCamera.position == playerCameraLoc.position &&
             playerCamera.rotation == previousRotation)
             return true;
         return false;
