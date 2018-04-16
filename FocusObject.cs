@@ -97,21 +97,29 @@ public abstract class FocusObject : MonoBehaviour
         isReturning = true; // returns the camera
     }
 
-    ///<summary>
-    ///boolean for checking wether camera has finished traveling.
-    ///</summary>
-    protected bool isOnFocus()
+    //boolean for checking whether camera has finished traveling.
+    private bool isOnFocus()
     {
         if (playerCamera.position == zoomLoc.position &&
             Quaternion.Angle(playerCamera.rotation, zoomLoc.rotation) < 1) // fix: cant(playerCamera.rotation == zoomLoc.rotation)
             return true;
         return false;
     }
-    protected bool isOnPlayer()// Only true the moment camera goes back to the player.
+    /// <summary>
+    /// property for checking if camera's on focus
+    /// </summary>
+    public bool IsOnFocus { get => isOnFocus(); }
+
+    //boolean for checking whether camera is back to the position
+    private bool isOnPlayer()// Only true the moment camera goes back to the player.
     {
         if (playerCamera.position == previousPosition &&
             playerCamera.rotation == previousRotation)
             return true;
         return false;
     }
+    /// <summary>
+    /// property for checking if camera's back to player
+    /// </summary>
+    public bool IsOnPlayer { get => isOnPlayer(); }
 }
